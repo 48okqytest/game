@@ -1,28 +1,59 @@
 // UI Module
 export function initUI() {
     // Page navigation
-    const navLinks = document.querySelectorAll('.main-nav a');
+    const navLinks = document.querySelectorAll('[data-page]');
     const pages = document.querySelectorAll('.page');
     
+    // Function to show a specific page
+    function showPage(pageId) {
+        // Update active nav link
+        navLinks.forEach(link => {
+            if (link.getAttribute('data-page') === pageId) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+        
+        // Show selected page
+        pages.forEach(page => {
+            if (page.id === `${pageId}-page`) {
+                page.classList.add('active');
+            } else {
+                page.classList.remove('active');
+            }
+        });
+        
+        // Update URL without reloading
+        history.pushState({}, '', `#${pageId}`);
+    }
+    
+    // Handle nav link clicks
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const pageId = link.getAttribute('data-page');
-            
-            // Update active nav link
-            navLinks.forEach(navLink => navLink.classList.remove('active'));
-            link.classList.add('active');
-            
-            // Show selected page
-            pages.forEach(page => page.classList.remove('active'));
-            document.getElementById(`${pageId}-page`).classList.add('active');
-            
-            // Handle game card clicks from home page
-            if (link.classList.contains('game-card')) {
-                document.querySelector(`.main-nav a[data-page="${pageId}"]`).click();
-            }
+            showPage(pageId);
         });
     });
+    
+    // Handle initial page load based on hash
+    function handleInitialPage() {
+        const hash = window.location.hash.substring(1);
+        const validPages = ['home', 'slots', 'coinflip', 'rocket', 'cases', 'battles'];
+        
+        if (hash && validPages.includes(hash)) {
+            showPage(hash);
+        } else {
+            showPage('home');
+        }
+    }
+    
+    // Handle browser back/forward
+    window.addEventListener('popstate', handleInitialPage);
+    
+    // Initialize the correct page
+    handleInitialPage();
     
     // User menu toggle
     const loginBtn = document.getElementById('login-btn');
