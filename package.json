@@ -1,0 +1,17 @@
+{
+  "name": "fake-gambling-site",
+  "version": "1.0.0",
+  "description": "A fake gambling website with various games",
+  "scripts": {
+    "build": "parcel build src/js/main.js --dist-dir public/js --public-url /js/ && sass src/scss/main.scss public/assets/styles/main.css",
+    "dev": "parcel src/js/main.js --dist-dir public/js --public-url /js/ && sass --watch src/scss/main.scss public/assets/styles/main.css",
+    "clean": "rm -rf public/js public/assets/styles",
+    "predeploy": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "parcel": "^2.8.3"
+  },
+  "devDependencies": {
+    "sass": "^1.58.0"
+  }
+}
